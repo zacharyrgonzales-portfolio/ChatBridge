@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os"
 
+	"github.com/sashabaranov/go-openai"
 	"github.com/spf13/cobra"
 )
 
@@ -11,8 +14,7 @@ var StartConversationCmd = &cobra.Command{
 	Short: "Start a new conversation with ChatGPT",
 	Run: func(cmd *cobra.Command, args []string) {
 		instruction, _ := cmd.Flags().GetString("instruction")
-		// Call a function to start the conversation with given instructions
-		response, err := StartConversation(instruction)
+		response, err := startConversation(instruction)
 		if err != nil {
 			fmt.Println("Error starting conversation:", err)
 			return
@@ -21,7 +23,28 @@ var StartConversationCmd = &cobra.Command{
 	},
 }
 
-func StartConversation(instruction string) (string, error) {
-	// Code to interact with OpenAI API and start the conversation
-	// Return the response or an error
+func init() {
+	StartConversationCmd.Flags().StringP("instruction", "i", "", "Custom instruction for the conversation")
+}
+
+func startConversation(instruction string) (string, error) {
+	client := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
+	resp, err := client.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: "Hello!",
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		return "", fmt.Errorf("ChatCompletion error: %v", err)
+	}
+
+	return resp.Choices[0].Message.Content, nil
 }
