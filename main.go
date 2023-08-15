@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"os"
 	"github.com/zacharyrgonzales-portfolio/ChatBridge/cmd"
+	"os"
 )
 
 // Root Command
 var rootCmd = &cobra.Command{Use: "chatbridge"}
-
 
 // Main
 func main() {
