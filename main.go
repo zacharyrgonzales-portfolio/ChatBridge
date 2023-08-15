@@ -13,11 +13,10 @@ var rootCmd = &cobra.Command{Use: "chatbridge"}
 
 // Main
 func main() {
-	rootCmd.AddCommand(cmd.startConversationCmd) // Add the subcommands here
+	rootCmd.AddCommand(cmd.StartConversationCmd) // Add the start conversation command
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 }
